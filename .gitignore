@@ -1,3 +1,5 @@
 *.csv
 *.pyc
 *.png
+10-11_DataCollection/
+*.ipynb_checkpoints
