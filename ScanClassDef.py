@@ -1,3 +1,5 @@
+import datetime as dt
+
 class Scan:
     """
     This class creates an object that holds lidar scans from both front lidars and the associated vehicle characteristic
@@ -74,3 +76,8 @@ class Scan:
         self.right['x']=right_x
         self.right['y']=right_y
         self.right['z']=right_z
+
+    def __string__(self):
+        message="This is a scan taken on " + str(self.datetime) + " when vehicle had gps coordinates of latitude " + str(self.gps[0]) + " and longitude " + str(self.gps[1]) +". Vehicle had heading of " + str(self.heading) + " and velocity of " + str(self.velocity) + "."
+
+        return str(message)
