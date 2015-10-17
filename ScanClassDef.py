@@ -1,0 +1,76 @@
+class Scan:
+    """
+    This class creates an object that holds lidar scans from both front lidars and the associated vehicle characteristic
+    data.
+    """
+    def __init__(self, raw_series):
+        
+        """
+        This init function sets up the Scan object by extracting the gps, heading, velocity and date time data. It also
+        converts the date time string into an appropriate datetime object for easier future manipulation. Does not return
+        anything since this is a class init function.
+        
+        raw_series: a pandas series
+        """
+        
+        #Vehicle GPS location is contained in the first 2 elements of the series as latitude then longitude
+        self.gps=[float(raw_series[0]), float(raw_series[1])] 
+        
+        #Vehicle heading is contained in the 3rd element of the series, here converted to a float before being stored
+        self.heading=float(raw_series[2])
+        
+        #TODO: I forgot what the 4th element is. Need to check --JP
+        
+        #Vehicle velocity is contained in the 5th element of the series, here converted to a float before being stored
+        self.velocity=float(raw_series[4])
+        
+        #The date and time that data was collected is contained in the 6th element of the series, here converted to a 
+        #datetime object before being stored
+        self.datetime=dt.datetime.strptime(raw_series[5].replace(';', ' '), "%m/%d/%Y %I:%M %p")
+        
+        #Calls the subfunction that creates the left and right lidar data dictionaries
+        self.MakeLidarData(raw_series)
+        
+    def MakeLidarData(self, raw_series):
+        
+        """
+        This function organizes the LIDAR data into dictionaries of data for the left and right LIDARs and adds the data
+        to the Scan object. Does not return anything since data is added to the object directly.
+        
+        raw_series: a pandas series
+        """
+        
+        #These 8 lines create the data dictionaries for the left and right lidar data as well as the relevant x, y and z
+        #data lists for the three cartesian coordinates in which data is received.
+        self.left={}
+        self.right={}
+        
+        left_x=[]
+        left_y=[]
+        left_z=[]
+        
+        right_x=[]
+        right_y=[]
+        right_z=[]
+        
+        #Iterates through the data corresponding to each angle of the lidar scan to extract the x, y and z data for
+        #the left and right lidar for each scan and appends the data to the appropriate list
+        for i in range(6,len(raw_series)):
+            raw_data=raw_series[i][1:-1].split(';')
+            
+            left_x.append(float(raw_data[0]))
+            left_y.append(float(raw_data[1]))
+            left_z.append(float(raw_data[2]))
+        
+            right_x.append(float(raw_data[3]))
+            right_y.append(float(raw_data[4]))
+            right_z.append(float(raw_data[5]))
+        
+        #Puts the data lists into the relevant left and right lidar dictionaries with appropriate keys
+        self.left['x']=left_x
+        self.left['y']=left_y
+        self.left['z']=left_z
+        
+        self.right['x']=right_x
+        self.right['y']=right_y
+        self.right['z']=right_z
