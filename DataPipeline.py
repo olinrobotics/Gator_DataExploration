@@ -1,6 +1,7 @@
 import pandas as pd
 import datetime as dt
 from ScanClassDef import *
+import math
 
 def ProcessData(filepath):
     
@@ -34,6 +35,8 @@ def ProcessData(filepath):
     #Sets up a dictionary to hold the pandas dataframes for each stack of data
     pd_dict={}
 
+    # print num_sets
+
     for i in range(num_sets):
         if i==0:
             
@@ -51,18 +54,45 @@ def ProcessData(filepath):
             ending=end_index[-1]+186
             end_index.append(ending)
             
-            #Retrieves the appropriate slice from the dataframe
-            pd_dict[i]=dataset[start_index[i]:end_index[i]]
+            raw_dataframe=dataset[start_index[i]:end_index[i]]
+            raw_dataframe_cols=raw_dataframe.columns
             
-            #Resets the index so that the concatenate function later on doesn't do weird stuff with column-wise concatenation
-            pd_dict[i] = pd_dict[i].reset_index(drop=True)
+            if raw_dataframe.isnull().any().any():
+                
+                test_row=raw_dataframe.iloc[0,:]
+                
+                end=0
+                working_cols=[]
+                for j in range(len(test_row)):
+    #                 print test_row[j]
+                    if math.isnan(float(test_row[j])):
+    #                     print "Hi"
+    #                     print math.isnan(test_row[j])
+                        end=j
+                        break
+                    else:
+                        working_cols.append(raw_dataframe[raw_dataframe_cols[j]])
 
-            #Retrieves the list that indicates number of dataframes we need to concatenate
-    
-    key_list=pd_dict.keys()
+                raw_dataframe_clean=pd.concat(working_cols, axis=1)
+                
+    #             print raw_dataframe_clean
+                
+                #Retrieves the appropriate slice from the dataframe
+                pd_dict[i]=raw_dataframe_clean
+            
+                #Resets the index so that the concatenate function later on doesn't do weird stuff with column-wise concatenation
+                pd_dict[i] = pd_dict[i].reset_index(drop=True)
+                        
+            else:
+                #Retrieves the appropriate slice from the dataframe
+                pd_dict[i]=dataset[start_index[i]:end_index[i]]
+            
+                #Resets the index so that the concatenate function later on doesn't do weird stuff with column-wise concatenation
+                pd_dict[i] = pd_dict[i].reset_index(drop=True)
+        key_list=pd_dict.keys()
 
-    #Creates that list of dataframes for use later
-    df_list=[]
+        #Creates that list of dataframes for use later
+        df_list=[]
 
     #Iterates through the list of keys and for each key,retrieves the dataframe and appends it into the list
     for key in key_list:
