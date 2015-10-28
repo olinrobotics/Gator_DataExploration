@@ -1,4 +1,6 @@
 import datetime as dt
+import numpy as np
+import pylab as plt
 
 class Scan:
     """
@@ -81,3 +83,33 @@ class Scan:
         message="This is a scan taken on " + str(self.datetime) + " when vehicle had gps coordinates of latitude " + str(self.gps[0]) + " and longitude " + str(self.gps[1]) +". Vehicle had heading of " + str(self.heading) + " and velocity of " + str(self.velocity) + "."
 
         return str(message)
+
+    def PlotFFT(self, lidar, axis, Plot):
+
+        if lidar.lower()=='left':
+
+            lidar=self.left
+        else:
+
+            lidar=self.right
+
+        if axis.lower()=='x':
+            L_list=lidar['x']
+
+        elif axis.lower()=='y':
+            L_list=lidar['y']
+
+        else:
+            L_list=lidar['z']
+        
+
+        fft_comp=np.fft.fft(L_list)
+
+        frequencies=np.fft.fftfreq(len(fft_comp))
+
+        if Plot==True:
+            plt.figure(0)
+            plt.plot(frequencies, np.abs(fft_comp))
+            plt.show()
+
+        return frequencies, fft_comp
