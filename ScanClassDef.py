@@ -74,7 +74,7 @@ class Scan:
 
         return str(message)
 
-    def PlotFFT(self, lidar, axis, Plot):
+    def GetLidarData(self, lidar, axis):
 
         if lidar.lower()=='left':
 
@@ -97,7 +97,12 @@ class Scan:
         else:
             for scan in lidar:
                 L_list.append(scan[2])
-        
+
+        return L_list
+
+    def PlotFFT(self, lidar, axis, Plot):
+
+        L_list=self.GetLidarData(self, lidar, axis)
 
         fft_comp=np.fft.fft(L_list)
 
