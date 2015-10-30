@@ -102,7 +102,7 @@ class Scan:
 
     def PlotFFT(self, lidar, axis, Plot):
 
-        L_list=self.GetLidarData(self, lidar, axis)
+        L_list=self.GetLidarData(lidar, axis)
 
         fft_comp=np.fft.fft(L_list)
 
