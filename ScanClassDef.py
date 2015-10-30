@@ -1,6 +1,8 @@
 import datetime as dt
 import numpy as np
 import pylab as plt
+import matplotlib.pyplot as p
+from mpl_toolkits.mplot3d import Axes3D
 
 class Scan:
     """
@@ -165,3 +167,22 @@ class Scan:
         for point_R in self.right:
             if point_R.x<x_min or point_R.x>x_max or point_R.y<y_min or point_R.y>y_max:
                 self.right.remove(point_R)
+
+
+    def PlotLidarData(self):
+        #set up 3D map
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        #set tuples
+        left_data_tuples = self.left
+        right_data_tuples = self.right
+
+        #unpack data
+        leftx,lefty,leftz=zip(*left_data_tuples)
+        rightx,righty,rightz=zip(*right_data_tuples)
+
+        #plot data
+        ax.scatter(leftx,lefty,leftz, c='c', marker='o')
+        ax.scatter(rightx,righty,rightz, c='r', marker='o')
+        p.show()
