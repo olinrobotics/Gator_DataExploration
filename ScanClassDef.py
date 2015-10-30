@@ -46,8 +46,8 @@ class Scan:
         
         #These 8 lines create the data dictionaries for the left and right lidar data as well as the relevant x, y and z
         #data lists for the three cartesian coordinates in which data is received.
-        self.left={}
-        self.right={}
+        self.left=[]
+        self.right=[]
         
         left_x=[]
         left_y=[]
