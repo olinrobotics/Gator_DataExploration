@@ -103,7 +103,7 @@ def ProcessData(filepath):
     final_df=pd.concat(df_list, axis=1)
 
     #Shows the dataframe to confirm concatenation was carried out as expected
-    final_df
+    #print final_df
 
     #Creates list of new column names to rename columns from 0 - 100 repeating to become 0 - 400
     new_ColumnName=range(0,len(final_df.columns))

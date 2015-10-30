@@ -62,22 +62,12 @@ class Scan:
         for i in range(6,len(raw_series)):
             raw_data=raw_series[i][1:-1].split(';')
             
-            left_x.append(float(raw_data[0]))
-            left_y.append(float(raw_data[1]))
-            left_z.append(float(raw_data[2]))
-        
-            right_x.append(float(raw_data[3]))
-            right_y.append(float(raw_data[4]))
-            right_z.append(float(raw_data[5]))
-        
-        #Puts the data lists into the relevant left and right lidar dictionaries with appropriate keys
-        self.left['x']=left_x
-        self.left['y']=left_y
-        self.left['z']=left_z
-        
-        self.right['x']=right_x
-        self.right['y']=right_y
-        self.right['z']=right_z
+            left_data=(float(raw_data[0]), float(raw_data[1]), float(raw_data[2]))
+            self.left.append(left_data)
+            
+            right_data=(float(raw_data[3]), float(raw_data[4]), float(raw_data[5]))
+            self.right.append(right_data)
+
 
     def __string__(self):
         message="This is a scan taken on " + str(self.datetime) + " when vehicle had gps coordinates of latitude " + str(self.gps[0]) + " and longitude " + str(self.gps[1]) +". Vehicle had heading of " + str(self.heading) + " and velocity of " + str(self.velocity) + "."
@@ -93,14 +83,20 @@ class Scan:
 
             lidar=self.right
 
+        L_list=[]
+        
         if axis.lower()=='x':
-            L_list=lidar['x']
+
+            for scan in lidar:
+                L_list.append(scan[0])
 
         elif axis.lower()=='y':
-            L_list=lidar['y']
+            for scan in lidar:
+                L_list.append(scan[1])
 
         else:
-            L_list=lidar['z']
+            for scan in lidar:
+                L_list.append(scan[2])
         
 
         fft_comp=np.fft.fft(L_list)
