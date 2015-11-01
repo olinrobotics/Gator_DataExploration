@@ -66,8 +66,12 @@ class Scan:
             right_data=(float(raw_data[3]), float(raw_data[4]), float(raw_data[5]))
             self.right.append(right_data)
 
+        #Sorts both the left and right lidar scan lists by increasing y value
+        self.left.sort(key=lambda x: x[1])
+        self.right.sort(key=lambda x: x[1])
+        
         #Sends the data to the ThresholdPoints function to remove lidar data outside the range of the camera
-        self.ThresholdPoints(thresholds)
+        #self.ThresholdPoints(thresholds)
 
 
     def __string__(self):
