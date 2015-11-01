@@ -69,7 +69,7 @@ class Scan:
         #Sorts both the left and right lidar scan lists by increasing y value
         self.left.sort(key=lambda x: x[1])
         self.right.sort(key=lambda x: x[1])
-        
+
         #Sends the data to the ThresholdPoints function to remove lidar data outside the range of the camera
         #self.ThresholdPoints(thresholds)
 
@@ -190,3 +190,17 @@ class Scan:
         ax.scatter(leftx,lefty,leftz, c='c', marker='o')
         ax.scatter(rightx,righty,rightz, c='r', marker='o')
         p.show()
+
+    def GetCleanedData(self):
+        cleaned_left_data_tuples=[]
+        cleaned_right_data_tuples=[]
+
+        for left_data in self.left:
+            if left_data[1]>=-37 and left_data[1]<=37:
+                cleaned_left_data_tuples.append(left_data)
+
+        for right_data in self.right:
+            if right_data[1]>=-37 and right_data[1]<=37:
+                cleaned_right_data_tuples.append(right_data)
+
+        return cleaned_left_data_tuples, cleaned_right_data_tuples
